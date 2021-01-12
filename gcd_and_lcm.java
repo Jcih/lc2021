@@ -5,4 +5,8 @@ class Solution {
 	    }
 	    return gcd_greatestCommonDivisor(b, a % b);
 	}
+
+	public int lcm_lowestCommonMultiplier(int a, int b) {
+		return a * b / gcd_greatestCommonDivisor(a, b);
+	}
 }
