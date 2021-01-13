@@ -1,5 +1,4 @@
 //intervals, greedy , using sort
-//O(nlogn + n = nlogn)
 class Solution {
     public int eraseOverlapIntervals(int[][] intervals) {
         if (intervals == null || intervals.length == 0) return 0;
