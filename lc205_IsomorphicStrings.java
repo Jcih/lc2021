@@ -2,6 +2,36 @@ class Solution {
     public boolean isIsomorphic(String s, String t) {
         
         // build two hashmap to store the char pairs
+
+        /*
+        1. test 
+        2. data structure, algo: HashMap
+        3. logic
+        4. reuslt
+        5. analysis
+        ===============
+        e -> a
+        g -> d
+        egg -> edd
+        
+        foo
+        bar
+        f -> b
+        o -> a
+        o != r
+        ========================
+        s_map
+        t_map
+        if (char in s) {
+           s_map.get() == char in t
+        } else {
+           if (char t in t map) return false
+           maps.put()
+           mapt.put()
+        }
+        
+        return true;
+        */
         
         HashMap<Character, Character> map1 = new HashMap<>();
         HashMap<Character, Character> map2 = new HashMap<>();
