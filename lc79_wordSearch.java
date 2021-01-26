@@ -6,6 +6,22 @@ class Solution {
         //search function return boolean
         
         //dfs
+
+        /*
+        1. example
+        2. Data Structure/ Algo : DFS (return boolean)
+        3. Logic
+        4. Result
+        5. Analysis
+        ====================
+        traverse grid until encounter first character of word, word.charAt(0)
+        
+        if (dfs(board, i, j, word, index, visited))
+            return true; 
+        return false;
+        
+        boolean dfs()
+        */
         
         int m = board.length, n = board[0].length;
         visited = new boolean[m][n];
