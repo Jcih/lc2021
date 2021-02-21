@@ -310,3 +310,95 @@ class Solution {
         
     }
 }
+
+
+//1650. Lowest Common Ancestor of a Binary Tree III
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node parent;
+};
+*/
+
+class Solution {
+    public Node lowestCommonAncestor(Node p, Node q) {
+        Node a = p, b = q;
+        
+        while (a != b) {
+            a = a == null ? q : a.parent;
+            b = b == null ? p : b.parent;
+        }
+        return a;
+    }
+}
+
+
+//498. Diagonal Traverse
+class Solution {
+    public int[] findDiagonalOrder(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) return new int[0];
+        
+        int row = matrix.length, col = matrix[0].length;
+        int[] res = new int[row * col];
+        int r = 0, c = 0;
+        
+        for (int i = 0; i < row * col; i++) {
+            res[i] = matrix[r][c];
+            
+            if ( (r + c) % 2 == 0) {
+                //go up
+                if (r - 1 >= 0 && c + 1 < col) {
+                    r = r - 1;
+                    c = c + 1;
+                } else if (c + 1 < col) {
+                    c = c + 1;
+                } else {
+                    r = r + 1;
+                }
+                
+            } else {
+                //go down
+                if (r + 1 < row && c - 1 >= 0) {
+                    r = r + 1;
+                    c = c - 1;
+                } else if (r + 1 < row) {
+                    r = r + 1;
+                } else {
+                    c = c + 1;
+                }                
+            }
+        }
+        return res;
+    }
+}
+
+
+//1213
+
+class Solution {
+    public List<Integer> arraysIntersection(int[] arr1, int[] arr2, int[] arr3) {
+        List<Integer> res = new ArrayList<>();
+        int p1 = 0, p2 = 0, p3 = 0;
+        
+        while (p1 < arr1.length && p2 < arr2.length && p3 < arr3.length) {
+            if (arr1[p1] == arr2[p2] && arr2[p2] == arr3[p3]) {
+                res.add(arr1[p1]);
+                p1++;
+                p2++;
+                p3++;
+            } else {
+                if (arr1[p1] < arr2[p2]) {
+                    p1++;
+                } else if (arr2[p2] < arr3[p3]) {
+                    p2++;
+                } else {
+                    p3++;
+                }
+            }
+        }
+        return res;
+    }
+}
