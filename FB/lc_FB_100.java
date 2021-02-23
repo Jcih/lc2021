@@ -311,6 +311,52 @@ class Solution {
     }
 }
 
+//8. String to Integer (atoi) 
+class Solution {
+    public int myAtoi(String s) {
+        
+        /*
+        1. trim the string
+        2. get the sign
+        3. if char not number, break
+        4. if char is number, convert to int
+        5. edge cases
+        **/
+        
+        s = s.trim();
+        if (s == null || s.length() == 0) return 0;
+        
+        boolean isNegtive = false;
+        double res = 0;
+        
+        int start = 0;
+        if (s.charAt(0) == '+' || s.charAt(0) == '-') start++;
+        if (s.charAt(0) == '-') isNegtive = true;
+        
+        for (int i = start; i < s.length(); i++) {
+            char cur = s.charAt(i);
+            if (cur > '9' || cur < '0') break;
+            
+            int num = cur - '0';
+            res = res * 10 + num;
+        }
+        
+        if (isNegtive) {
+            res = -res;
+        }
+        
+        if (res > Integer.MAX_VALUE) {
+            res = Integer.MAX_VALUE;
+        }
+        if (res < Integer.MIN_VALUE) {
+            res = Integer.MIN_VALUE;
+        }
+        return (int)res;
+        
+        
+    }
+}
+
 
 //1650. Lowest Common Ancestor of a Binary Tree III
 /*
@@ -400,5 +446,82 @@ class Solution {
             }
         }
         return res;
+    }
+}
+
+//1209
+
+
+class Solution {
+    
+    class Node {
+        char c;
+        int count;
+        public Node(char c, int count) {
+            this.c = c;
+            this.count = count;
+        }
+    }
+    
+    public String removeDuplicates(String s, int k) {
+        /*
+        
+        use stack store Node <char c , int count >
+
+        **/
+        
+        
+        Stack<Node> stack = new Stack<>();
+        
+        for (char c : s.toCharArray()) {
+            if (!stack.isEmpty() && c == stack.peek().c) {
+                stack.peek().count++;
+            } else {
+                stack.push(new Node(c, 1));
+            }
+            
+            if (stack.peek().count == k) {
+                stack.pop();
+            }
+  
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            int n = node.count;
+            char tmp = node.c;
+            for (int i = 0; i < n; i++) {
+                sb.append(tmp);
+            }
+            
+        }
+        return sb.reverse().toString();
+        
+    }
+    
+}
+
+
+//896. Monotonic Array
+class Solution {
+    public boolean isMonotonic(int[] A) {
+        if (A == null || A.length <= 2) return true;
+        
+        boolean increase = false;
+        boolean decrease = false;
+        
+        for (int i = 1; i < A.length; i++) {
+            if (A[i - 1] > A[i])
+                decrease = true;
+            
+            if (A[i - 1] < A[i])
+                increase = true;
+        }
+        
+        if (increase && decrease)
+            return false;
+        else 
+            return true;
     }
 }
