@@ -1,3 +1,4 @@
+//similar to 1216
 class Solution {
     public int longestPalindromeSubseq(String s) {
         if (s == null || s.length() == 0) return 0;

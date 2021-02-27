@@ -12,7 +12,7 @@ class Solution {
         int left = 0, right = nums.length - 1;
         int mod = (int)1e9 + 7;
         int[] pow = new int[right + 1];
-        pow[0] = 1;
+        pow[0] = 1; 
         
         //from 0 to i, the number of permutaions
         for (int i = 1; i <= right; i++) {

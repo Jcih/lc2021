@@ -109,7 +109,12 @@ class Solution {
             }
         }
         
-        return Arrays.stream(arr, left, left + k).boxed().collect(Collectors.toList());
+        List<Integer> res = new ArrayList<>();
+        for (int i = left; i < left + k; i++) {
+            res.add(arr[i]);
+        }
+        return res;
+        //return Arrays.stream(arr, left, left + k).boxed().collect(Collectors.toList());
     }
 }
 
