@@ -394,3 +394,61 @@ class RandomizedSet {
  * boolean param_2 = obj.remove(val);
  * int param_3 = obj.getRandom();
  */
+
+
+//958  Check Completeness of a Binary Tree
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public boolean isCompleteTree(TreeNode root) {
+        if (root == null) return true;
+        
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        
+        while (queue.peek() != null) { // break condition, memorize
+            TreeNode cur = queue.poll();
+            queue.offer(cur.left);
+            queue.offer(cur.right);
+            
+        }
+        
+        while (!queue.isEmpty() && queue.peek() == null) {
+            queue.poll();
+        }
+        return queue.isEmpty();
+    }
+}
+
+
+//162. Find Peak Element
+class Solution {
+    public int findPeakElement(int[] nums) {
+        if (nums== null || nums.length < 2) return 0;
+        
+        if (nums[0] > nums[1])
+                return 0;
+        if (nums[nums.length - 1] > nums[nums.length - 2])
+            return nums.length - 1;
+        
+        for (int i = 1; i < nums.length - 1; i++) {
+            
+            if (nums[i] > nums[i - 1] && nums[i] > nums[i + 1])
+                return i;
+        }
+        return 0;
+    }
+}
