@@ -361,6 +361,69 @@ class Solution {
 }
 
 
+
+
+//129   Sum Root to Leaf Numbers
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    int res = 0;
+    public int sumNumbers(TreeNode root) {
+        /*
+        
+        DFS until the node has no child, we can add the number to result;
+        each level, last * 10 + cur
+        
+        
+        */
+        
+        if (root == null) return 0;
+        helper(root, 0);
+        return res;
+    }
+    
+    private void helper(TreeNode root, int last) {
+        if (root == null) return;
+        
+        last = last * 10 + root.val;
+        if (root.left == null && root.right == null)
+            res += last;
+        
+        helper(root.left, last);
+        helper(root.right, last);
+    }
+}
+
+//766. Toeplitz Matrix
+class Solution {
+    public boolean isToeplitzMatrix(int[][] matrix) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+        
+        for (int i = 0; i < row - 1; i++) {
+            for (int j = 0; j < col - 1; j++) {
+                if (matrix[i][j] != matrix[i + 1][j + 1])
+                    return false;
+            }
+        }
+        return true;
+    }
+}
+
+
 // 286. Walls and Gates
 class Solution {
     public void wallsAndGates(int[][] rooms) {
