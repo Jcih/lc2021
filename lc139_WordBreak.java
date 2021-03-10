@@ -1,5 +1,15 @@
+//https://www.youtube.com/watch?v=hLQYQ4zj0qg
 class Solution {
     public boolean wordBreak(String s, List<String> wordDict) {
+        /*
+        
+        dp
+        loop from i
+           j from 0 - i
+           if  dp[j] && wordDict.contains(s.substring(j , i))
+               dp[i] = true;
+        **/
+
         boolean[] dp = new boolean[s.length() + 1];
         dp[0] = true;
         

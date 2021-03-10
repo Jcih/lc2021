@@ -5,6 +5,16 @@
 //986 Interval List Intersections
 class Solution {
     public int[][] merge(int[][] intervals) {
+
+        /*
+        1. sort the array according to the first element
+        2. loop arr from index 1
+        3. if the current start <= prev's end , 
+                merge: update the prev's end with the max of prev's end and cur's end
+           else 
+                add prev to res, update prev with cur
+        
+        **/
         if (intervals == null || intervals.length == 0) return null;
         
         Arrays.sort(intervals, (a, b) -> a[0] - b[0]);

@@ -1,5 +1,12 @@
 //https://www.youtube.com/watch?v=cqhED6Xgy9Y
 class MedianFinder {
+      /*
+    1. maintain 2 priority queues, minHeap and maxHeap
+    2. set the maxHeap.size == minHeap.size || maxHeap.size == minHeap.size + 1
+    3. if maxHeap.size == minHeap.size, return (maxHeap.peek() + minHeap.peek) / 2.0
+    4. else return maxHeap.peek();
+    
+    **/
 
     PriorityQueue<Integer> maxHeap;
     PriorityQueue<Integer> minHeap;
