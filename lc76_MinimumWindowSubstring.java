@@ -1,6 +1,16 @@
 //https://www.youtube.com/watch?v=IzynHx-O4lE
 //sliding window
 class Solution {
+
+    /*
+        1. count each char's frequency in t
+        2. set a start index 
+        3. for loop to traverse string s (variable i as end boundary)
+        4.    for each char c, if c'freq in s is less than in t, count it as valid, and update it's freq in s
+        5. if (count == t.length())
+        6.        move start index: if char at start not in t or freq in s > in t, start++, update freq in s
+        7. if i - start is minimum, update res as s.substring(start, i + 1);
+        **/
     public String minWindow(String s, String t) {
         //get t's char's freq
         HashMap<Character, Integer> mapT = new HashMap<>();

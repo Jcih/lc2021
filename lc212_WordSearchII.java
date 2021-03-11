@@ -1,3 +1,12 @@
+/*
+        
+build a trie according to the words array
+
+loop board, if The char in trie root, dfs trie to find if word exist.
+   when dfs, mark the char as visited only on the same thread
+   if the current direction not valid, mark the char as unvisited for next traverse
+**/
+
 class Solution {
     // DFS + Trie
     //https://www.youtube.com/watch?v=rSDG7mlk5iQ
