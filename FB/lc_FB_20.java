@@ -553,6 +553,119 @@ class Solution {
     }
 }
 
+//301
+//https://www.youtube.com/watch?v=-IbZA4WckOc&t=1s
+
+class Solution {
+    
+    private int getMinParenToRemove(String s) {
+        int minParenRemoveCount = 0;
+        int open = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '(') {
+                open++;
+            } else if (c == ')') {
+                if (open == 0) {
+                    minParenRemoveCount++;
+                } else {
+                    open--;
+                }
+            }
+        }
+        minParenRemoveCount += open;
+        return minParenRemoveCount;
+    }
+    
+    
+    public List<String> removeInvalidParentheses(String s) {
+        int minParenToRemove = getMinParenToRemove(s);
+        Set<String> res = new HashSet<>();
+        dfs(s, 0, minParenToRemove, 0, "", res);
+        
+        //convert set to list
+        List<String> list = new ArrayList<>();
+        for (String s1 : res) {
+            list.add(s1);
+        }
+        return list;
+    }
+    
+    private void dfs(String s, int index, int parenRemoveCount, int open, String tmp, Set<String> res) {
+        if (index == s.length()) {
+            if (parenRemoveCount == 0 && open == 0) {
+                res.add(tmp);
+            }
+            return;
+        }
+        
+        if (parenRemoveCount < 0) return;
+        
+        if (s.charAt(index) == '(') {
+            dfs(s, index + 1, parenRemoveCount, open + 1, tmp + '(', res);
+            dfs(s, index + 1, parenRemoveCount - 1, open, tmp, res);
+        } else if (s.charAt(index) == ')') {
+            if (open > 0) {
+                dfs(s, index + 1, parenRemoveCount, open - 1, tmp + ')', res);
+            }
+            dfs(s, index + 1, parenRemoveCount - 1, open, tmp, res);
+        } else {
+            dfs(s, index + 1, parenRemoveCount, open, tmp + s.charAt(index), res);
+        }
+    }
+}
+
+//269. Alien Dictionary
+class Solution {
+    public String alienOrder(String[] words) {
+        int[] inDegree = new int[26];
+        Map<Character, List<Character>> graph = new HashMap<>();
+        
+        for (String word : words) {
+            for (char c : word.toCharArray()) {
+                graph.put(c, new ArrayList<>());
+            }
+        }
+        
+        for (int i = 0; i < words.length - 1; i++) {
+            String start = words[i];
+            String end = words[i + 1];
+            if (start.length() > end.length() && start.startsWith(end)) return "";
+            
+            int len = Math.min(start.length(), end.length());
+            for (int j = 0; j < len; j++) {
+                
+                char out = start.charAt(j);
+                char  in = end.charAt(j);
+                if (out != in) {
+                    graph.get(out).add(in);
+                    inDegree[in - 'a']++;
+                    break; 
+                }
+            }
+        }
+        
+        StringBuilder sb =  new StringBuilder();
+        Queue<Character> q = new LinkedList<>();
+        for (char c : graph.keySet()) {
+            if (inDegree[c - 'a'] == 0) {
+                q.offer(c);
+            }
+        }
+        
+        while (!q.isEmpty()) {
+            char out = q.poll();
+            sb.append(out);
+            for (char in : graph.get(out)) {
+                inDegree[in - 'a']--;
+                if (inDegree[in - 'a'] == 0) {
+                    q.offer(in);
+                }
+            }
+        }
+        return sb.length() == graph.size() ? sb.toString() : "";
+    }
+}
 
 
 //125. Valid Palindrome
