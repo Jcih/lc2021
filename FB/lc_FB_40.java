@@ -1,3 +1,55 @@
+//297 Serialize and Deserialize Binary Tree
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if (root == null) return "null,";
+        
+        String s = "";
+        s += root.val + ",";
+        s += serialize(root.left);
+        s += serialize(root.right);
+        return s;
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        String[] split = data.split(",");
+        List<String> nodeList = new ArrayList<>(Arrays.asList(split));
+        return deserializeHelper(nodeList);
+    }
+    
+    private TreeNode deserializeHelper(List<String> nodeList) {
+        if (nodeList == null) return null;
+        
+        String head = nodeList.get(0);
+        nodeList.remove(0);
+        if (head.equals("null")) return null;
+        
+        TreeNode root = new TreeNode(Integer.valueOf(head));
+        root.left = deserializeHelper(nodeList);
+        root.right = deserializeHelper(nodeList);
+        return root;
+        
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser = new Codec();
+// Codec deser = new Codec();
+// TreeNode ans = deser.deserialize(ser.serialize(root));
+
+
+
 //938. Range Sum of BST
 
 
@@ -68,6 +120,20 @@ class Solution {
         }
         
         return rangeSumBST(root.left, low, high) + rangeSumBST(root.right, low, high);
+        
+    }
+}
+
+
+class Solution {
+    public int rangeSumBST(TreeNode root, int low, int high) {
+        //DFS level order; revursive
+        if (root == null) return 0;
+        if (root.val < low) return rangeSumBST(root.right, low, high);
+        else if (root.val > high) return rangeSumBST(root.left, low, high);
+        else {
+            return root.val  + rangeSumBST(root.right, low, high) + rangeSumBST(root.left, low, high);
+        }
         
     }
 }
@@ -293,7 +359,93 @@ class Solution {
     }
 }
 
+// 340
+//https://www.youtube.com/watch?v=XMXIX8kNknA
+//sliding window
+class Solution {
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        int res = 0;
+        
+        HashMap<Character, Integer> map = new HashMap<>();
+        
+        int end = 0;
+        
+        for (int i = 0; i < s.length(); i++) {
+            
+            while (end < s.length() && map.size() <= k) {
+                char c = s.charAt(end);
+                if (map.containsKey(c)) {
+                    map.put(c, map.get(c) + 1);
+                } else {
+                    if (map.size() == k) {
+                        break;
+                    }
+                    map.put(c, 1);
+                }
+                end++;
+            }
+            
+            res = Math.max(res, end - i);
+            
+            char c = s.charAt(i);
+            if (map.containsKey(c)) {
+                int count = map.get(c);
+                if (count > 1) {
+                    map.put(c, count - 1);
+                } else {
+                    map.remove(c);
+                }
+            }
+        }
+        return res;
+    }
+}
 
+
+//42
+class Solution {
+    public int trap(int[] height) {
+        
+        /*
+        1. Find the max height index
+        2. traverse from left and right to the peak index
+        3. define leftMax and rightMax, 
+             if height[i] < leftMax, water + leftMax - height[i]
+             else leftMax = height[i]
+             same for right
+        **/
+        //edge cases
+        if (height == null || height.length <= 2) return 0;
+        
+        int maxHeight = 0;
+        int maxIndex = 0;
+        for (int i = 0; i < height.length; i++) {
+            if (height[i] > maxHeight) {
+                maxHeight = height[i];
+                maxIndex = i;
+            } 
+        }
+        int water = 0;
+        int leftMax = height[0];
+        for (int i = 0; i < maxIndex; i++) {
+            if (height[i] < leftMax) {
+                water += leftMax - height[i];
+            } else {
+                leftMax = height[i];
+            }
+        }
+        
+        int rightMax = height[height.length - 1];
+        for (int i = height.length - 1; i > maxIndex; i--) {
+            if (height[i] < rightMax) {
+                water += rightMax - height[i];
+            } else {
+                rightMax = height[i];
+            }
+        }
+        return water;
+    }
+}
 
 
 // 543. Diameter of Binary Tree

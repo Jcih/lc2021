@@ -381,6 +381,43 @@ class Solution {
     }
 }
 
+//329. Longest Increasing Path in a Matrix
+//https://www.youtube.com/watch?v=IgCyyYNRpVE
+class Solution {
+    public int longestIncreasingPath(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) return 0;
+        
+        int res = 0;
+        int row = matrix.length, col = matrix[0].length;
+        int[][] dp = new int[row][col];
+        for ( int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                res = Math.max(res, dfs(matrix, i, j, dp));
+            }
+        }
+        return res;
+    }
+    
+    private int dfs(int[][] matrix, int row, int col, int[][] dp) {
+        if (dp[row][col] > 0) return dp[row][col];
+        
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        
+        for (int[] dir : directions) {
+            int newRow = row + dir[0];
+            int newCol = col + dir[1];
+            
+            if (newRow < 0 || newRow >= matrix.length || newCol < 0 ||
+                newCol >= matrix[0].length || matrix[newRow][newCol] <= matrix[row][col])
+                continue;
+            dp[row][col] = Math.max(dp[row][col], dfs( matrix, newRow, newCol,dp));
+        }
+        //return ++dp[row][col];
+        dp[row][col] = dp[row][col] + 1;//update first, then return
+        return dp[row][col];
+    }
+}
+
 //380  Insert Delete GetRandom O(1)
 class RandomizedSet {
     List<Integer> list;

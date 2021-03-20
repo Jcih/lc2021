@@ -83,7 +83,7 @@ public Node connect(Node root) {
             root = root.next;
             if (root == null) {//reach the end of current layer
                 pre = dummy;//next new layer
-                root = dummy.next;//currrent layer, root comes down one level below to the first available non null node
+                root = dummy.next;//(current level's head )currrent layer, root comes down one level below to the first available non null node
                 dummy.next = null;  //reset dummyhead back to default null
             }
         }
