@@ -1,3 +1,158 @@
+
+//146. LRU Cache
+
+class LRUCache {
+
+    /*
+    HashMap key: Node
+    Node {
+    key
+    val
+    prev
+    next
+    }
+    
+    get () : check if the node in map,if not return -1; else , remove in list, add to head of list, return val
+    
+    put () check if the node in map, if yes, update val of node, remove from list and add to head
+                                     if no, check size of map, and add to head of list
+    
+    **/
+    
+    class Node {
+        int key;
+        int val;
+        Node prev;
+        Node next;
+        
+        public Node() {
+            prev = null;
+            next = null;
+        }
+    }
+    
+    Node head;
+    Node tail;
+    Map<Integer, Node> map;
+    int size;
+    
+    
+    public LRUCache(int capacity) {
+        map = new HashMap<>();
+        head = new Node();
+        tail = new Node();
+        head.next = tail;
+        tail.prev = head;
+        size = capacity;
+        
+        
+    }
+    
+    public int get(int key) {
+        
+        Node cur = map.get(key);
+        if (cur != null) {
+            remove(cur);
+            addHead(cur);
+            return cur.val;
+        }
+        return -1;
+        
+    }
+    
+    public void put(int key, int value) {
+        Node cur = map.get(key);
+        
+        if (cur != null) {
+            cur.val = value;
+            remove(cur);
+            addHead(cur);
+        } else {
+            
+            if (map.size() == size) {
+                map.remove(tail.prev.key);
+                remove(tail.prev);
+            }
+            Node tmp = new Node();
+            tmp.key = key;
+            tmp.val = value;
+            addHead(tmp);
+            map.put(key, tmp);
+        }
+    }
+    
+    
+    private void addHead(Node node) {
+        Node first = head.next;
+        head.next = node;
+        node.next = first;
+        first.prev = node;
+        node.prev = head;
+    }
+    
+    private void remove(Node node) {
+        Node before = node.prev;
+        Node after = node.next;
+        before.next = after;
+        after.prev = before;
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
+
+//246. Strobogrammatic Number
+class Solution {
+    public boolean isStrobogrammatic(String num) {
+        int i = 0, j = num.length() - 1;
+        Map<Character, Character> map = new HashMap<>();
+        map.put('0', '0');
+        map.put('1', '1');
+        map.put('6', '9');
+        map.put('9', '6');
+        map.put('8', '8');
+       
+        while (i <= j) {
+            if (!map.containsKey(num.charAt(i))) return false;
+            if (num.charAt(j) != map.get(num.charAt(i))) return false;
+            
+            i++;
+            j--;
+        }
+        
+        
+        return true;
+    }
+}
+
+
+//311
+class Solution {
+    public int[][] multiply(int[][] mat1, int[][] mat2) {
+        int m = mat1.length,k = mat1[0].length, n = mat2[0].length;
+        
+        
+        int[][] res = new int[m][n];
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < k; j++) {
+                if (mat1[i][j] != 0) {
+                    for (int z = 0; z < n; z++) {
+                        if (mat2[j][z] != 0) {
+                            res[i][z] += mat1[i][j] * mat2[j][z];
+                        }
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}
+
 //203. Remove Linked List Elements
 /**
  * Definition for singly-linked list.
