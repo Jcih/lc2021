@@ -33,3 +33,31 @@ class Solution {
         return queue.isEmpty();
     }
 }
+
+
+/**
+        there shouldn't be nodes after a null node
+        */
+
+class Solution {
+    public boolean isCompleteTree(TreeNode root) {
+        
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        boolean end = false;
+        
+        while (!queue.isEmpty()) {
+            
+            TreeNode cur = queue.poll();
+            
+            if (cur == null) end = true;
+            else {
+                if (end) return false;
+                queue.offer(cur.left);
+                queue.offer(cur.right);
+            }
+            
+        }
+        return true;
+    }
+}

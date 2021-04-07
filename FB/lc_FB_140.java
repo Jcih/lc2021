@@ -510,3 +510,161 @@ class Solution {
         }
     }
 }
+
+
+// 787
+// Dijkstra's Algorithm
+class Solution {
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+        
+        int[][] g = new int[n][n];
+        for (int[] f : flights) {
+            g[f[0]][f[1]] = f[2];
+        }
+        
+        PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+        heap.offer(new int[]{0, src, K + 1});
+        
+        while (!heap.isEmpty()) {
+            int[] cur = heap.poll();
+            int price = cur[0], place = cur[1], remainStops = cur[2];
+            
+            if (place == dst) return price;
+            if (remainStops > 0) {
+                for (int i = 0; i < n; i++) {
+                    if (g[place][i] > 0) {
+                        heap.offer(new int[]{price + g[place][i], i, remainStops - 1});
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+}
+
+
+//529
+//DFS, Uber
+
+class Solution {
+    
+    int[][] dirs = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1},{0, 1}, {1, -1}, {1, 0}, {1, 1}};
+    public char[][] updateBoard(char[][] board, int[] click) {
+        if (board == null || board.length == 0) return board;
+        
+        int row = click[0], col = click[1];
+        char clicked = board[row][col];
+        
+        if (clicked == 'M') {
+            //over
+            board[row][col] = 'X';
+        } else if (clicked == 'E') {
+            updateDFS(board, row, col);
+        }
+        return board;
+    }
+    
+    private void updateDFS(char[][] board, int x, int y) {
+        //consider boundaries
+        if (x < 0 || y < 0 || x >= board.length || y >= board[0].length || board[x][y] != 'E') return;
+        
+        int adjMines = cntMines(board, x, y);
+        
+        if (adjMines > 0) {
+            board[x][y] = (char) (adjMines + '0');
+        } else {
+            for (int[] dir : dirs) {
+                board[x][y] = 'B';
+                updateDFS(board, x + dir[0], y + dir[1]);
+            }
+        }
+    }
+    
+    private int cntMines(char[][] board, int x, int y) {
+        int count = 0;
+        
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                int row = x + i;
+                int col = y + j;
+                //consider boundaries
+                if (row >= 0 && col >= 0 && row < board.length && col < board[0].length && board[row][col] == 'M') count++;
+            }
+        }
+        return count;
+    }
+}
+
+
+//1197
+class Solution {
+    
+    int[][] moves = new int[][] {{-2, -1}, {-2, 1}, {2, -1}, {2, 1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}};
+    public int minKnightMoves(int x, int y) {
+        
+        // abs(x), abs(y) has the same result of (x, y)
+        x = Math.abs(x);
+        y = Math.abs(y);
+        
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[] {0, 0});
+        
+        Set<String> visited = new HashSet<>();
+        visited.add("0,0");
+        
+        int step = 0;
+        
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int[] curPos = queue.poll();
+                if (curPos[0] == x && curPos[1] == y)
+                    return step;
+                
+                for (int[] move : moves) {
+                    int[] newPos = new int[] {curPos[0] + move[0], curPos[1] + move[1]};
+                    String newPosStr = newPos[0] + "," + newPos[1];
+                    if (visited.contains(newPosStr) || newPos[0]  < -1 || newPos[1] < -1)
+                        continue;
+                    queue.add(newPos);
+                    visited.add(newPosStr);
+                }
+            }
+            step++;
+        }
+        return step;
+        
+        
+        
+    }
+}
+
+//844
+//FACEBOOK
+class Solution {
+    public boolean backspaceCompare(String S, String T) {
+        String s1 = getCuttedString(S);
+        String s2 = getCuttedString(T);
+        return s1.equals(s2);
+    }
+    
+    private String getCuttedString(String s) {
+        Stack<Character> stack = new Stack<>();
+        for (char c : s.toCharArray()) {
+            if (c == '#') {
+                if (!stack.isEmpty()) {
+                    stack.pop();
+                }
+            } else {
+                stack.push(c);
+            }
+        }
+         
+        //return String.valueOf(stack); //值得记住
+        StringBuilder sb = new StringBuilder();
+        while (!stack.isEmpty()) {
+            sb.insert(0, stack.pop());
+        }
+        return sb.toString();
+    }
+}

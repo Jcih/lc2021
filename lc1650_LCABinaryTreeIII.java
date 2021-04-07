@@ -7,7 +7,7 @@ class Node {
     public Node parent;
 };
 */
-
+// similar to 160
 class Solution {
     public Node lowestCommonAncestor(Node p, Node q) {
         Node a = p, b = q;
