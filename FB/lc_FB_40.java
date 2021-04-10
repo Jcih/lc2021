@@ -359,6 +359,86 @@ class Solution {
     }
 }
 
+
+
+//621. Task Scheduler
+//https://www.youtube.com/watch?v=eGf-26OTI-A
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        int[] freq = new int[26];
+        for (char c : tasks) {
+            freq[c - 'A']++;
+        }
+        
+        Arrays.sort(freq);
+        
+        int max_val = freq[25] - 1;
+        int idle_slots = max_val * n;
+        
+        for (int i = 24; i >= 0; i--) {
+            if (freq[i] > 0) {
+                /*
+                The purpose is that we don't substract more idle spots than we are supposed to.
+                the max_value will contain the number of times the most frequent task needs to be done 
+                (since you order the array and then you take the last position) minus 1. We substract one  
+                because for the last task executed, you don't need to wait n intervals of time.
+                Now, every other element of the char array is supposed to be less than or equal to the max_value, 
+                but because we substracted 1 to it, now we don't know it for sure. So, let's say that after sorting the array, 
+                the last two positions hold the same value. The max_value will be then less than the element in char_map[24]. 
+                So if we substract this value to the idle spots, we will be substracting one idle spot that we didn't take in 
+                count in the first place.
+                
+                */
+                idle_slots -= Math.min(freq[i], max_val);
+            }
+        }
+        
+        return idle_slots > 0 ? idle_slots + tasks.length : tasks.length;
+    }
+}
+
+
+//65. Valid Number
+//https://www.youtube.com/watch?v=5gmtCtAooZE
+class Solution {
+    public boolean isNumber(String s) {
+
+        /*
+        there are cases: +/-, . , e/E, digits, others
+        for +/-: have to be first or first after e
+        . : have to be before e, and only one .
+        e/E: only one e/E
+        digits: mark seen digits, so which will impact e/E and .
+        others: not allowed
+
+        **/
+        s = s.trim();
+        boolean eSeen = false;
+        boolean numSeen = false;
+        boolean dotSeen = false;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (Character.isDigit(c)) {
+                numSeen = true;
+                
+            } else if (c == 'e' || c == 'E') {
+                if (eSeen || !numSeen) return false;
+                eSeen = true;
+                numSeen = false;
+            } else if (c == '.') {
+                if (eSeen || dotSeen) return false;
+                dotSeen = true;
+            } else if (c == '-' || c == '+') {
+                if (i != 0 && s.charAt(i - 1) != 'e') return false;
+            } else {
+                return false;
+            }
+        }
+        return numSeen;
+    }
+}
+
+
 // 340
 //https://www.youtube.com/watch?v=XMXIX8kNknA
 //sliding window
@@ -448,6 +528,67 @@ class Solution {
 }
 
 
+//173 Binary Search Tree Iterator
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class BSTIterator {
+    /*
+    inorder: 3, 7, 9, 15, 20
+    
+    inorder traverse uses stack, to push root and left
+    
+    1. stack [7, 3]
+    
+    2. next: pop 3, pop 7, ask if 7 has right child, and push right child and all left child of right.
+    **/
+
+    Stack<TreeNode> stack;
+    public BSTIterator(TreeNode root) {
+        stack = new Stack<>();
+        while (root != null) {
+            stack.push(root);
+            root = root.left;
+        }
+    }
+    
+    public int next() {
+        
+        TreeNode res = stack.pop();
+        if (res.right != null) {
+            TreeNode tmp = res.right;
+            while (tmp!= null) {
+                stack.push(tmp);
+                tmp = tmp.left;
+            }
+        }
+        return res.val;
+    }
+    
+    public boolean hasNext() {
+        return !stack.isEmpty();
+    }
+}
+
+/**
+ * Your BSTIterator object will be instantiated and called as such:
+ * BSTIterator obj = new BSTIterator(root);
+ * int param_1 = obj.next();
+ * boolean param_2 = obj.hasNext();
+ */
+
 // 543. Diameter of Binary Tree
 /**
  * Definition for a binary tree node.
@@ -483,6 +624,65 @@ class Solution {
         res = Math.max(res, left + right);
         return Math.max(left, right) + 1;
     }
+}
+
+
+
+//249. Group Shifted Strings
+class Solution {
+    public List<List<String>> groupStrings(String[] strings) {
+        //https://www.youtube.com/watch?v=vUd-7qS6BPQ
+        
+        /*
+        acef  bdfg 
+        0245  1356
+              -1
+              0245   same pattern
+              
+              25 1 3 4
+              -25
+              0 -24 -22 -21  mod 26
+              0 2 4 5
+              
+        store the key in the hash map, for each word in a string, generate a key,
+        if add the word to the list of same key
+        **/
+        
+        
+        Map<String, List<String>> map = new HashMap<>();
+        for (String word : strings) {
+            String key = getPattern(word);
+            
+            if (map.containsKey(key)) {
+                map.get(key).add(word);
+            } else {
+                map.put(key, new ArrayList<>());
+                map.get(key).add(word);
+            }
+        }
+        
+        List<List<String>> res = new ArrayList<>();
+        res.addAll(map.values());
+        
+        return res;
+    }
+    
+    private String getPattern(String word) {
+        
+        int first = word.charAt(0) - 'a';
+        StringBuilder sb = new StringBuilder();
+        
+        for (char c : word.toCharArray()) {
+            int num = c - 'a';
+            
+            num = num - first;
+            if (num < 0) num = num + 26;
+            sb.append(num + ","); // to distinguish 1 2 and 12
+        }
+        return sb.toString();
+    }
+    
+    
 }
 
 
