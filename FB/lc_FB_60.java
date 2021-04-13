@@ -97,7 +97,7 @@ class Solution {
         }
         
         for (int i = 0; i < numarr.length; i++) {
-            //loop through 9 to 0
+            //loop through 9 to cur number
             
             for (char d = '9'; d > numarr[i]; d--) {
                 if (rightMost[d - '0'] > i) {
